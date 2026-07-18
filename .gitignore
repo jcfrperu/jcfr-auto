@@ -170,3 +170,4 @@ htmls/
 
 # others
 .vscode
+output/**

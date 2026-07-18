@@ -1,6 +1,6 @@
-# TikTok Unfollower
+# jcfr-auto
 
-Script to automate unfollowing accounts on TikTok using Playwright.
+Utility automation library that controls Chrome exclusively via CDP (Chrome DevTools Protocol).
 
 ## How it works
 

@@ -1,0 +1,18 @@
+{
+  "name": "jcfr-auto",
+  "version": "1.0.0",
+  "description": "Utility automation library that controls Chrome exclusively via CDP (Chrome DevTools Protocol).",
+  "scripts": {
+    "run-main": "tsx main.ts"
+  },
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.61.1",
+    "playwright": "^1.61.1",
+    "tsx": "^4.19.4"
+  }
+}

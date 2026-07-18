@@ -10,7 +10,7 @@ async function runThis(page: Page): Promise<void> {
   console.log(`title: ${title}`)
 
   await waitForEnter()             // pause for manual steps before continuing
-  await writeToFile('title.txt', title)
+  await writeToFile('output/result.txt', title)
 
   const menuOption = page.locator('button[aria-label="Explore"]')
   await moveAsHumanThen(page, menuOption, () => menuOption.click())  // human-like move + action

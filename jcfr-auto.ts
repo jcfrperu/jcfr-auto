@@ -1,23 +1,29 @@
-// FOR GLOBAL USAGE (no package.json required):
-//   npm install -g tsx playwright @playwright/test @types/node
-//   tsx main.ts
-//
-// FOR LOCAL USAGE (with package.json, copy this file into an existing project):
-//   npm install playwright @playwright/test @types/node
-//
-// CERTIFICATED VERSIONS:
-// tsx             : ^4.19.4
-// playwright      : ^1.61.1
+// REQUIREMENTS: Node.js 24+, pnpm 11+, Google Chrome installed on the OS
+
+// INSTALL DEPENDENCIES: copy this file into an existing project and install the following pnpm commands
+// pnpm add tsx playwright @playwright/test
+// pnpm add -D @types/node typescript
+
+// CERTIFICATED DEPENDENCIES:
+// tsx: ^4.19.4
+// playwright: ^1.61.1
 // @playwright/test: ^1.61.1
-// @types/node     : ^26.1.1
-// typescript      : ^7.0.2
+
+// CERTIFICATED DEV DEPENDENCIES:
+// @types/node: ^26.1.1
+// TypeScript: ^7.0.2
+
+// AUTOMATION FLOW USING THIS LIBRARY:
+// Chrome is launched natively via spawn() — no automation flags injected.
+// Playwright then attaches via CDP (Chrome DevTools Protocol), making the script
+// significantly harder to detect as a bot (navigator.webdriver = false).
 
 import {Browser, BrowserContext, chromium, Locator, Page} from "playwright"
 import {spawn} from "child_process"
 import * as readline from "readline"
-import assert from "node:assert"
-import path from "path";
-import fs from "fs/promises";
+import {strict as assert} from "node:assert"
+import * as path from "path"
+import * as fs from "fs/promises"
 
 export const CHROME_PATHS = {
   WINDOWS: '/Program Files/Google/Chrome/Application/chrome.exe',
@@ -28,15 +34,6 @@ export const CHROME_PATHS = {
 } as const
 
 // CONFIGURATION:
-// Chrome is launched natively via spawn() — no automation flags injected.
-// Playwright then attaches via CDP (Chrome DevTools Protocol), making the script
-// significantly harder to detect as a bot (navigator.webdriver = false).
-//
-// CHROME_PROFILE_DIR: path to a dedicated Chrome profile folder.
-// Before running the script for the first time, open Chrome with this profile,
-// log in to the target website and complete any 2FA. The session is stored in the profile
-// and reused automatically on every subsequent run.
-
 const CHROME_PORT = 9222                                   // remote debugging CDP port Chrome listens on (9222-9228)
 const CHROME_PATH = CHROME_PATHS.WINDOWS                   // path to Chrome executable
 const CHROME_WAIT_MS = 2000                                // ms to wait for Chrome to be ready before attaching
@@ -52,7 +49,7 @@ export interface BrowserOptions {
   profile: string
 }
 
-// BROWSER:
+// BROWSER FUNCTIONALITIES:
 // launches Chrome via CDP and returns the active page
 export async function openBrowser(options?: BrowserOptions): Promise<Page> {
   await launchCDP(options)
@@ -70,24 +67,6 @@ export async function closeBrowser(page: Page | null): Promise<void> {
     }
   } catch {
     console.warn('closeBrowser() - CDP session failed - Chrome may have already closed')
-  }
-}
-
-// SCRIPT
-// runs fn(page) inside a managed browser session — handles launch, errors, cleanup, and timing
-export async function withBrowser(fn: (page: Page) => Promise<void>, options?: BrowserOptions): Promise<void> {
-  const start = Date.now()
-  let page: Page | null = null
-  try {
-    console.info('withBrowser() - started\n')
-    page = await openBrowser(options)
-    await fn(page)
-    console.info('\nwithBrowser() - completed successfully')
-  } catch (error) {
-    handleError('withBrowser() - failed', error)
-  } finally {
-    await closeBrowser(page)
-    console.info(`withBrowser() - elapsed in ${((Date.now() - start) / 1000).toFixed(2)}s`)
   }
 }
 
@@ -122,7 +101,25 @@ async function attachCDP(options?: BrowserOptions): Promise<Page> {
   return context.pages().length > 0 ? context.pages()[0] : await context.newPage()
 }
 
-// ERRORS:
+// SCRIPT FUNCTIONALITIES:
+// runs fn(page) inside a managed browser session — handles launch, errors, cleanup, and timing
+export async function withBrowser(fn: (page: Page) => Promise<void>, options?: BrowserOptions): Promise<void> {
+  const start = Date.now()
+  let page: Page | null = null
+  try {
+    console.info('withBrowser() - started\n')
+    page = await openBrowser(options)
+    await fn(page)
+    console.info('\nwithBrowser() - completed successfully')
+  } catch (error) {
+    handleError('withBrowser() - failed', error)
+  } finally {
+    await closeBrowser(page)
+    console.info(`withBrowser() - elapsed in ${((Date.now() - start) / 1000).toFixed(2)}s`)
+  }
+}
+
+// ERROR FUNCTIONALITIES:
 // logs an error safely from an unknown catch value; set traceStack=true to also print the stack
 export function handleError(context: string, error: unknown, traceStack: boolean = TRACE_STACK): void {
   const message = error instanceof Error ? error.message : String(error)
@@ -132,7 +129,7 @@ export function handleError(context: string, error: unknown, traceStack: boolean
   }
 }
 
-// WAITS:
+// WAIT FUNCTIONALITIES:
 // waits a random number of milliseconds between msMin and msMax, scaled by SLEEP_FACTOR
 export function wait(msMin: number = SLEEP_MIN_MS, msMax: number = SLEEP_MAX_MS, traceWaiting: boolean = TRACE_WAITING): Promise<void> {
   const randomRange = Math.floor(Math.random() * (msMax - msMin + 1)) + msMin
@@ -154,7 +151,7 @@ export async function waitForEnter(msg: string = 'Press ENTER to continue: '): P
   })
 }
 
-// HUMAN ACTIONS:
+// HUMAN ACTIONS FUNCTIONALITIES:
 // moves the mouse from a random nearby origin to the center of the locator
 // following a quadratic Bézier curve to simulate a natural human trajectory
 export async function moveAsHuman(page: Page, locator: Locator): Promise<void> {
