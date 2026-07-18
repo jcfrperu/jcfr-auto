@@ -190,7 +190,7 @@ export async function moveAsHumanThen(page: Page, locator: Locator, fn: () => Pr
 }
 
 // OTHERS
-// writes text to a file relative to the project root; creates intermediate directories if needed
+// write text to a file relative to the project root; creates intermediate directories if needed
 export async function writeToFile(filename: string, text: string): Promise<void> {
   const rootPath = path.resolve(process.cwd())
   const filePath = path.join(rootPath, filename)

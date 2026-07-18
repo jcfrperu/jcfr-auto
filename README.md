@@ -82,7 +82,7 @@ Pass multiple `withBrowser()` calls to `Promise.all()` to run several Chrome ins
 
 Each instance **must** use a different port and profile directory:
 
-- **Port** — each Chrome process binds its CDP server to a single port. Two instances on the same port will conflict and
+- **Port** — each Chrome process binds its CDP server to a single port. Two instances on the same port will conflict, and
   the second one will fail to start.
 - **Profile** — Chrome places a lock file (`SingletonLock`) inside the profile directory when it opens. If a second
   instance tries to use the same profile, Chrome detects the lock and refuses to launch.
@@ -136,7 +136,7 @@ await moveAsHuman(page, page.locator('button[aria-label="For You"]'))
 
 ### `moveAsHumanThen(page, locator, fn)`
 
-Same as `moveAsHuman`, then executes `fn` after arriving at the element. Use for move + action pairs.
+Same as `moveAsHuman`, then executes `fn` after arriving at the element. Use for move and action pairs.
 
 ```typescript
 await moveAsHumanThen(page, menuOption, () => menuOption.click())
