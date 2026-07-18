@@ -9,7 +9,7 @@ launched natively with `spawn()` and Playwright attaches to it as an external cl
 which makes the script significantly harder to detect as a bot compared to Playwright's default launch method
 (`navigator.webdriver = false`).
 
-The entry point `main.ts` defines the script logic and passes it to `withBrowser()`, which handles the full browser
+`example.ts` is a usage example showing how to import and call the library. `withBrowser()` handles the full browser
 lifecycle: launch, execution, error handling, cleanup, and timing.
 
 ## Requirements
@@ -18,17 +18,27 @@ lifecycle: launch, execution, error handling, cleanup, and timing.
 - pnpm 11+
 - Google Chrome installed on the OS
 
-## Install
+## Usage
+
+There are two ways to use this library:
+
+**Option A — Copy the file directly (recommended)**
+
+Copy `jcfr-auto.ts` into your existing project and install the dependencies:
+
+```bash
+pnpm add tsx playwright @playwright/test
+pnpm add -D @types/node typescript
+```
+
+**Option B — Clone this repo**
 
 ```bash
 pnpm install
+pnpm run-example   # runs example.ts
 ```
 
-## Run
-
-```bash
-pnpm run-main
-```
+`example.ts` is just a usage example — replace it with your own script.
 
 ## Writing a script
 

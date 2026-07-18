@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Utility automation library that controls Chrome exclusively via CDP (Chrome DevTools Protocol).",
   "scripts": {
-    "run-main": "tsx main.ts"
+    "run-example": "tsx example.ts"
   },
   "type": "module",
   "devDependencies": {
